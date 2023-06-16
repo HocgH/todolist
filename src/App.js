@@ -2,15 +2,15 @@ import React, {useEffect, useState} from "react"
 import {AiOutlinePlus} from 'react-icons/ai'
 import Todo from "./Todo";
 import {db} from './firebase'
-import {query, collection, onSnapshot, updateDoc, doc, addDoc} from 'firebase/firestore'
+import {query, collection, onSnapshot, updateDoc, doc, addDoc, deleteDoc} from 'firebase/firestore'
 
 const style = {
   bg: `h-screen w-screen p-4 bg-gradient-to-r from-[#E1AEFF] to-[#FFECEC]`,
   container: `bg-slate-100 max-w-[500px] w-full m-auto rounded-md shadow-xl p-4`,
   heading: `text-3xl font-bold text-center text-gray-800 p-2`,
   form: `flex justify-between`,
-  input: `border p-2 w-full text-xl`,
-  button: `border p-4 ml-2 bg-purple-500 text-slate-100`,
+  input: `border p-2 w-full text-xl rounded-lg`,
+  button: `border p-4 ml-2 bg-purple-500 text-slate-100 rounded-lg`,
   count: `text-center p-2`
 }
 
@@ -56,6 +56,10 @@ function App() {
   }
   // delete
 
+  const deleteTodo = async(id) => {
+    deleteDoc(doc(db, 'todos', id))
+  }
+
   return (
     <div className={style.bg}>
       <div className={style.container}>
@@ -66,7 +70,7 @@ function App() {
         </form>
         <ul>
           {todos.map((todo, index) =>(
-            <Todo key={index} todo={todo} toggleComplete={toggleComplete} />
+            <Todo key={index} todo={todo} toggleComplete={toggleComplete} deleteTodo={deleteTodo}/>
           ))}
         </ul>
         {todos.length<1 ? null : <p className={style.count}>{`You have ${todos.length} todos`}</p> }
